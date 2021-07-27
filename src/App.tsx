@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Wrapper from './components/Wrapper';
 import NowWhat from './components/NowWhat';
+import Metrics from './Features/Metrics/Metrics';
+import { Box, Container } from '@material-ui/core';
 
 const store = createStore();
 const theme = createMuiTheme({
@@ -30,7 +32,12 @@ const App = () => (
     <Provider store={store}>
       <Wrapper>
         <Header />
-        <NowWhat />
+        <Container maxWidth="sm">
+          <Box mt={5}>
+            <Metrics />
+            <NowWhat />
+          </Box>
+        </Container>
         <ToastContainer />
       </Wrapper>
     </Provider>

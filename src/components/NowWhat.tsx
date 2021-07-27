@@ -11,7 +11,7 @@ import Avatar from './Avatar';
 
 const useStyles = makeStyles({
   card: {
-    margin: '5% 25%',
+    margin: '5%',
   },
 });
 
