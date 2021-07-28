@@ -1,8 +1,8 @@
 import { createClient, Provider, useQuery } from 'urql';
 import React, { useEffect } from 'react';
-import { InputLabel, LinearProgress, makeStyles, MenuItem, Select } from '@material-ui/core';
+import { InputLabel, LinearProgress, makeStyles, MenuItem, Select, Chip } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions } from './reducer';
+import { actions, MetricsOption } from './reducer';
 import { MetricsOptions } from './reducer';
 import { IState } from '../../store';
 
@@ -12,6 +12,13 @@ const useStyles = makeStyles({
   },
   metricSelectContainer: {
     alignContent: 'center',
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: 2,
   },
 });
 
@@ -23,7 +30,7 @@ interface GetMetricsDataResponse {
   getMetrics: MetricsOptions;
 }
 
-const MetricLabels = {
+export const MetricLabels = {
   oilTemp: 'Oil Temperature',
   tubingPressure: 'Tubing Pressure',
   waterTemp: 'Water Temperature',
@@ -37,10 +44,11 @@ query {
 }
 `;
 
-const getMetrics = (state: IState) => {
-  const { metricsOptions } = state.metrics;
+const getMetricsSelector = (state: IState) => {
+  const { metricsOptions, selectedMetrics } = state.metrics;
   return {
     metricsOptions,
+    selectedMetrics,
   };
 };
 
@@ -51,7 +59,7 @@ const Metrics = () => {
   const [{ data, fetching, error }] = useQuery<GetMetricsDataResponse>({
     query: getMetricsQueryDocument,
   });
-  const { metricsOptions } = useSelector(getMetrics);
+  const { metricsOptions, selectedMetrics } = useSelector(getMetricsSelector);
 
   useEffect(() => {
     if (error) {
@@ -62,11 +70,24 @@ const Metrics = () => {
   }, [dispatch, data, error]);
 
   if (fetching || !data) return <LinearProgress />;
-
   return (
     <div className={classes.metricSelectContainer}>
       <InputLabel>Metrics</InputLabel>
-      <Select type="select" className={classes.metricSelect}>
+      <Select
+        multiple
+        className={classes.metricSelect}
+        value={selectedMetrics}
+        renderValue={() => (
+          <div className={classes.chips}>
+            {selectedMetrics.map(value => (
+              <Chip key={value} label={MetricLabels[value]} className={classes.chip} />
+            ))}
+          </div>
+        )}
+        onChange={e => {
+          dispatch(actions.selectMetric(e.target.value as MetricsOption));
+        }}
+      >
         {metricsOptions.map(metric => (
           <MenuItem value={metric}>{MetricLabels[metric]}</MenuItem>
         ))}

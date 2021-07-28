@@ -10,6 +10,8 @@ import Wrapper from './components/Wrapper';
 import NowWhat from './components/NowWhat';
 import Metrics from './Features/Metrics/Metrics';
 import { Box, Container } from '@material-ui/core';
+import CurrentMetricData from './Features/CurrentMetricData/CurrentMetricData';
+import Chart from './Features/Chart/Chart';
 
 const store = createStore();
 const theme = createMuiTheme({
@@ -35,6 +37,8 @@ const App = () => (
         <Container maxWidth="sm">
           <Box mt={5}>
             <Metrics />
+            <CurrentMetricData />
+            <Chart />
             <NowWhat />
           </Box>
         </Container>
