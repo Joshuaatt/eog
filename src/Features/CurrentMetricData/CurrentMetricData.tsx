@@ -4,7 +4,8 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { actions } from './reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../store';
-import { MetricLabels } from '../Metrics/Metrics';
+import { MetricLabels } from '../Metrics/reducer';
+// import { MetricLabels } from '../Metrics/Metrics';
 
 const subscriptionClient = new SubscriptionClient('wss://react.eogresources.com/graphql', {
   reconnect: true,
@@ -21,9 +22,15 @@ const client = createClient({
   ],
 });
 
-const subscription = `
-subscription {
+const CurrentMetricsSubscriptionDocument = `
+  subscription {
     newMeasurement {metric, at, value, unit}
+  }
+`;
+
+const HistoricalMetricsDocument = `
+  query {
+    getMultipleMeasurements { metric, at, value, unit }
   }
 `;
 
@@ -38,8 +45,16 @@ const getMetricsSelector = (state: IState) => {
 
 const CurrentMetricData = () => {
   const dispatch = useDispatch();
-  const [subscriptionResponse] = useSubscription({ query: subscription });
+  const [subscriptionResponse] = useSubscription({ query: CurrentMetricsSubscriptionDocument });
   const { selectedMetrics, newMeasurements } = useSelector(getMetricsSelector);
+
+  // const [{ data, fetching, error }] = useQuery({
+  //   query: HistoricalMetricsDocument,
+  //   variables: {
+  //     input: Object.keys(Metric)
+  //   }
+  // });
+  // console.log('>>>>>>>', data, fetching, error);
 
   useEffect(() => {
     if (!subscriptionResponse.data) return;
@@ -53,7 +68,7 @@ const CurrentMetricData = () => {
   return (
     <div>
       {selectedMetrics.map(selectedMetric => (
-        <div>
+        <div key={selectedMetric}>
           {MetricLabels[newMeasurements[selectedMetric].metric]} {newMeasurements[selectedMetric].value}{' '}
           {newMeasurements[selectedMetric].unit}
         </div>

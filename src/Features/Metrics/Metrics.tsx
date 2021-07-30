@@ -2,8 +2,7 @@ import { createClient, Provider, useQuery } from 'urql';
 import React, { useEffect } from 'react';
 import { InputLabel, LinearProgress, makeStyles, MenuItem, Select, Chip } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions, MetricsOption } from './reducer';
-import { MetricsOptions } from './reducer';
+import { actions, MetricLabels, MetricsOption, MetricsOptions } from './reducer';
 import { IState } from '../../store';
 
 const useStyles = makeStyles({
@@ -30,18 +29,10 @@ interface GetMetricsDataResponse {
   getMetrics: MetricsOptions;
 }
 
-export const MetricLabels = {
-  oilTemp: 'Oil Temperature',
-  tubingPressure: 'Tubing Pressure',
-  waterTemp: 'Water Temperature',
-  casingPressure: 'Casing Pressure',
-  injValveOpen: 'Injection Valve Open',
-};
-
-const getMetricsQueryDocument = `
-query {
-  getMetrics
-}
+const GetMetricsQueryDocument = `
+  query {
+    getMetrics
+  }
 `;
 
 const getMetricsSelector = (state: IState) => {
@@ -57,12 +48,13 @@ const Metrics = () => {
   const dispatch = useDispatch();
 
   const [{ data, fetching, error }] = useQuery<GetMetricsDataResponse>({
-    query: getMetricsQueryDocument,
+    query: GetMetricsQueryDocument,
   });
   const { metricsOptions, selectedMetrics } = useSelector(getMetricsSelector);
 
   useEffect(() => {
     if (error) {
+      // TODO: Handle errors
       // dispatch(actions.metricsApiErrorReceived({ error: error.message }));
     }
     if (!data) return;
@@ -89,7 +81,9 @@ const Metrics = () => {
         }}
       >
         {metricsOptions.map(metric => (
-          <MenuItem value={metric}>{MetricLabels[metric]}</MenuItem>
+          <MenuItem key={metric} value={metric}>
+            {MetricLabels[metric]}
+          </MenuItem>
         ))}
       </Select>
     </div>

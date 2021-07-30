@@ -34,7 +34,7 @@ const App = () => (
     <Provider store={store}>
       <Wrapper>
         <Header />
-        <Container maxWidth="sm">
+        <Container maxWidth="lg">
           <Box mt={5}>
             <Metrics />
             <CurrentMetricData />
