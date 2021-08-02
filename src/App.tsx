@@ -7,7 +7,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Wrapper from './components/Wrapper';
-import NowWhat from './components/NowWhat';
 import Metrics from './Features/Metrics/Metrics';
 import { Box, Container } from '@material-ui/core';
 import CurrentMetricData from './Features/CurrentMetricData/CurrentMetricData';
@@ -39,7 +38,6 @@ const App = () => (
             <Metrics />
             <CurrentMetricData />
             <Chart />
-            <NowWhat />
           </Box>
         </Container>
         <ToastContainer />

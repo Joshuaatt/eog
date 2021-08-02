@@ -62,7 +62,7 @@ const Chart = () => {
       yAxis,
       series: filteredTimeSeries,
     };
-  }, [timeSeries]);
+  }, [timeSeries, selectedMetrics, yAxis]);
 
   return (
     <div>

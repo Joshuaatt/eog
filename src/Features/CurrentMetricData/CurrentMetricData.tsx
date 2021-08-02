@@ -98,7 +98,7 @@ const CurrentMetricData = () => {
   const after = historicDataStartTime - 24 * 3600;
   const before = historicDataStartTime;
   const input = React.useMemo(() => MetricKeysArray.map(key => ({ metricName: key, after, before })), [after, before]);
-  const [{ data, fetching, error }] = useQuery({
+  const [{ data }] = useQuery({
     query: HistoricalMetricsDocument,
     variables: {
       input,
@@ -110,7 +110,7 @@ const CurrentMetricData = () => {
     if (data) {
       dispatch(actions.prependHistoricData({ multipleMeasurements: data.getMultipleMeasurements }));
     }
-  }, [data]);
+  }, [data, dispatch]);
 
   useEffect(() => {
     if (!subscriptionResponse.data) return;
