@@ -72,7 +72,7 @@ const slice = createSlice({
     },
     prependHistoricData: (state, action: PayloadAction<HistoricData>) => {
       const { multipleMeasurements } = action.payload;
-      multipleMeasurements.map(historicDataItem => {
+      multipleMeasurements.forEach(historicDataItem => {
         const timeSeriesIndex = state.timeSeries.findIndex(ts => ts.name === historicDataItem.metric);
         historicDataItem.measurements.reverse().forEach(measurement => {
           state.timeSeries[timeSeriesIndex].data!.unshift([measurement.at, measurement.value]);
